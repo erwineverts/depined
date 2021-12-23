@@ -13,8 +13,7 @@
     "build": "tsc -p tsconfig.json",
     "build:watch": "tsc -p tsconfig.json -w",
     "test": "jest --runInBand",
-    "test:watch": "jest --runInBand --watch-all",
-    "publish": "yarn test && yarn build"
+    "test:watch": "jest --runInBand --watch-all"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",
