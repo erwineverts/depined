@@ -2,6 +2,9 @@ type Gen<T> = {
   [P in keyof T]: (deps: T) => T[P]
 }
 
+/**
+ * @deprecated Use depined instead
+ */
 export function injector<T extends object>(builder: Gen<T>) {
   const container: T = {} as T;
   const loading: { [P in keyof T]?: boolean | undefined } = {}
