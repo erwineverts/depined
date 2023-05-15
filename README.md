@@ -10,7 +10,7 @@ Depined is a dependency injection tool for JavaScript and TypeScript. It is a li
 - Works great for JavaScript
 - Works even better for TypeScript without (beta) annotation and type casting
 - Only needed dependencies are being build
-- Works with interfaces, classes, functions and constants
+- Works with interfaces, classes, functions, promises and constants
 - Get typescript errors if the dependencies change without accidentally calling some io as with mocking
 
 ## Installation
@@ -27,101 +27,7 @@ yarn add depined
 
 ## Usage
 
-### Class based
-
-```typescript
-import depined from "depined";
-
-interface ILogger {
-  info(msg: string): void;
-  error(err: Error): void;
-}
-
-class ConsoleLogger implements ILogger {
-  info(msg: string): void {
-    console.log(msg);
-  }
-  error(err: Error): void {
-    console.error(err);
-  }
-}
-
-class Program {
-  constructor(private readonly logger: ILogger) {}
-
-  run() {
-    this.logger.info("Started program");
-  }
-}
-
-type Dependencies = {
-  logger: ILogger;
-  program: Program;
-};
-
-const container = depined<Dependencies>({
-  logger: () => new ConsoleLogger(),
-  program: ({ logger }) => new Program(logger),
-});
-
-container.program.run();
-```
-
-### Function based
-
-```Typescript
-import depined from "../injector";
-
-function programBuilder({ log }: Pick<Dependencies, 'log'>) {
-  return function program() {
-    log('program started')
-  }
-}
-
-type Context = { env: () => 'prod' | 'test' | 'dev' }
-function contextBuilder(): Context {
-  return {
-    env() {
-      return 'prod'
-    }
-  }
-}
-
-function logBuilder({ context }: Pick<Dependencies, 'context'>) {
-  const env = context.env();
-
-  return (msg: string) => console.log(`[${env}] ${msg}`)
-}
-
-type Dependencies = {
-  log: typeof console.log,
-  program: ReturnType<typeof programBuilder>,
-  context: Context,
-}
-
-const container = depined<Dependencies>({
-  log: logBuilder,
-  context: contextBuilder,
-  program: programBuilder,
-});
-
-container.program(); // [prod] program started
-```
-
-## Using it for testing
-
-Using example above
-
-```typescript
-test("program", () => {
-  const log = jest.fn();
-  const program = programBuilder({ log });
-
-  program();
-
-  expect(log).toBeCalledWith("program started");
-});
-```
+Check out the unit tests: tests/depined.test.ts
 
 ## Test driven development
 
