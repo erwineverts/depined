@@ -68,4 +68,17 @@ describe('depined', () => {
         expect(container.person.name).toBe('Henk')
         expect(container.greeter(container.person)).toBe('Hello Henk')
     })
+
+    test('combining 2 injectors', async () => {
+
+        const configDi = depined()
+            .set('config', 'secret');
+
+        const main = await depined()
+            .combine(await configDi.resolve())
+            .inject('connect', ({ config }) => `connect with config: "${config}"`)
+            .resolve();
+
+        expect(main.connect).toBe('connect with config: "secret"')
+    })
 })
