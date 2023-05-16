@@ -6,7 +6,7 @@ function combine<T, K extends string, V>(container: T, name: K, value: V) {
   return { ...container, [name]: value } as T & { [k in K]: V }
 }
 
-function injector<T extends {}>(container: T): Depined<T> {
+function injector<T extends object>(container: T): Depined<T> {
   return {
     async resolve() {
       const r = {} as { [K in keyof T]: Awaited<T[K]> }
@@ -24,15 +24,15 @@ function injector<T extends {}>(container: T): Depined<T> {
       const value = fn(container)
       return injector(combine(container, name, value))
     },
-    combine<T2 extends {}>(services: T2) {
+    combine<T2 extends object>(services: T2) {
       return injector({ ...container, ...services })
     }
   }
 }
 
-type Depined<T> = {
-    set<K extends string, V>(name: K, value: V): Depined<T & { [k in K]: V }>
-    inject<K extends string, V>(name: K, fn: (container: T) => V): Depined<T & { [k in K]: V }>
-    resolve: () => Promise<{ [K in keyof T]: Awaited<T[K]> }>
-    combine<T2 extends {}>(services: T2): Depined<T & T2>;
+type Depined<T extends object> = {
+  set<K extends string, V>(name: K, value: V): Depined<T & { [k in K]: V }>
+  inject<K extends string, V>(name: K, fn: (container: T) => V): Depined<T & { [k in K]: V }>
+  resolve: () => Promise<{ [K in keyof T]: Awaited<T[K]> }>
+  combine<T2 extends object>(services: T2): Depined<T & T2>;
 }
