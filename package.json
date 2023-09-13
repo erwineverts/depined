@@ -1,10 +1,11 @@
 {
   "name": "depined",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "files": [
     "dist/"
   ],
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/erwineverts/depined.git"
